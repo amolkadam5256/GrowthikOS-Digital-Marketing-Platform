@@ -1,0 +1,54 @@
+{
+  "folders": [
+    {
+      "name": "🌐 frontend (Next.js)",
+      "path": "frontend"
+    },
+    {
+      "name": "⚙️ backend (FastAPI)",
+      "path": "backend"
+    },
+    {
+      "name": "🏗️ infrastructure",
+      "path": "infrastructure"
+    },
+    {
+      "name": "🐳 docker",
+      "path": "docker"
+    },
+    {
+      "name": "📚 docs",
+      "path": "docs"
+    }
+  ],
+  "settings": {
+    "typescript.preferences.importModuleSpecifier": "non-relative",
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "eslint.workingDirectories": [
+      {
+        "directory": "frontend",
+        "changeProcessCWD": true
+      }
+    ],
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/.next": true,
+      "**/venv": true,
+      "**/__pycache__": true
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "esbenp.prettier-vscode",
+      "dbaeumer.vscode-eslint",
+      "bradlc.vscode-tailwindcss",
+      "ms-python.python",
+      "ms-python.vscode-pylance",
+      "eamodio.gitlens"
+    ]
+  }
+}
