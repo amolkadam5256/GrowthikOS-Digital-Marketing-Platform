@@ -1,18 +1,28 @@
 @import "tailwindcss";
+@import "ag-grid-community/styles/ag-grid.css";
+@import "ag-grid-community/styles/ag-theme-quartz.css";
+@import "@xyflow/react/dist/style.css";
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-900: #1e3a8a;
+  --color-primary-50: #fff1f2;
+  --color-primary-100: #ffe4e6;
+  --color-primary-500: #d90b1c;
+  --color-primary-600: #b90918;
+  --color-primary-900: #5b0610;
 
   --color-secondary-50: #f8fafc;
   --color-secondary-500: #64748b;
   --color-secondary-900: #0f172a;
+
+  --color-brand-cream: #f7f3ea;
+  --color-brand-ink: #151515;
+  --color-brand-red: #d90b1c;
+  --color-brand-red-dark: #940714;
+  --color-brand-gold: #e6ca5d;
+  --color-brand-blue: #4258ff;
 
   --color-destructive-500: #ef4444;
   --color-success-500: #22c55e;
@@ -20,11 +30,13 @@
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-brand: var(--font-rostex), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a;
+  --background: #fffaf5;
+  --foreground: #151515;
+  --font-rostex: "Rostex";
 }
 
 @media (prefers-color-scheme: dark) {
@@ -32,6 +44,12 @@
     --background: #020617;
     --foreground: #f8fafc;
   }
+}
+
+@font-face {
+  font-family: "Rostex";
+  src: url("/fonts/Rostex-Regular.ttf") format("truetype");
+  font-display: swap;
 }
 
 body {
@@ -50,5 +68,23 @@ body {
     max-width: 1400px;
     padding-right: 2rem;
     padding-left: 2rem;
+  }
+
+  .font-display {
+    font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  .font-brand {
+    font-family: var(--font-brand);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
   }
 }

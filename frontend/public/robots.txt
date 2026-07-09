@@ -1,0 +1,56 @@
+User-agent: *
+Allow: /
+# Disallow sensitive/system paths
+Disallow: /admin/
+Disallow: /api/
+Disallow: /cgi-bin/
+Disallow: /tmp/
+Disallow: /private/
+Disallow: /dashboard/
+Disallow: /_next/
+Disallow: /wp-admin/
+Disallow: /wp-login.php
+Disallow: /cart/
+Disallow: /checkout/
+
+# Disallow low-value pagination and search queries
+Disallow: /search?
+Disallow: /*?
+Disallow: /*?replytocom=
+Disallow: /author/
+Disallow: /tag/
+
+# Explicitly allow important assets
+Allow: /_next/static/
+Allow: /_next/image/
+Allow: /public/
+Allow: /images/
+Allow: /fonts/
+
+# Optimization for AI search and chat bots
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Sitemap and AI reference links
+Sitemap: https://www.growthikmedia.com/sitemap.xml
+Llms-txt: https://www.growthikmedia.com/llms.txt

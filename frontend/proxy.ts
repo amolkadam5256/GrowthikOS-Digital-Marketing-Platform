@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+import { defaultLocale, isLocale } from "./i18n/config";
+
 /**
  * Global proxy — runs on every matched request at the edge.
  * Replaces the deprecated `middleware.ts` convention in Next.js 16+.
@@ -15,9 +17,19 @@ import type { NextRequest } from "next/server";
  *  - Rate-limiting headers
  *  - A/B testing
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function proxy(_request: NextRequest) {
-  const response = NextResponse.next();
+export function proxy(request: NextRequest) {
+  const requestHeaders = new Headers(request.headers);
+  const locale = request.nextUrl.pathname.split("/")[1];
+  requestHeaders.set(
+    "x-growthik-locale",
+    locale && isLocale(locale) ? locale : defaultLocale
+  );
+
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 
   // Security headers applied at the edge (before the page is rendered)
   response.headers.set("X-DNS-Prefetch-Control", "on");

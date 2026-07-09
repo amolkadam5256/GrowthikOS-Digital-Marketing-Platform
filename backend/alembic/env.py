@@ -1,92 +1,73 @@
-import asyncio
+"""Alembic environment — supports both offline and online migration modes.
+
+Online mode uses a *synchronous* psycopg2 connection (DATABASE_URL_SYNC) so
+that Alembic can control the transaction directly without asyncio overhead.
+"""
+
 from logging.config import fileConfig
 
-from sqlalchemy import pool
-from sqlalchemy.ext.asyncio import async_engine_from_config
+from sqlalchemy import create_engine, pool
 
 from alembic import context
 
-# this is the Alembic Config object, which provides access to the values within the .ini file in use.
+# ── Alembic config object ─────────────────────────────────────────────────────
 config = context.config
 
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
+# Set up Python logging as configured in alembic.ini
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
+# ── Import models so autogenerate can detect schema changes ───────────────────
 from app.core.config import get_settings
 from app.database import Base
-# Import models here so Alembic detects them for autogenerate
-from app.modules.users.models import User
+from app.modules.users.models import User  # noqa: F401 — required for autogenerate
 
 target_metadata = Base.metadata
 
 settings = get_settings()
 
-# overwrite connection url from env file config settings
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL_SYNC)
 
+# ── Offline migrations ────────────────────────────────────────────────────────
 
 def run_migrations_offline() -> None:
-    """Run migrations in 'offline' mode.
-
-    This configures the context with just a URL
-    and not an Engine, though an Engine is acceptable
-    here as well.  By skipping the Engine creation
-    we don't even need a DBAPI to be available.
-
-    Calls to context.execute() here emit the given string to the
-    script output.
-
-    """
-    url = config.get_main_option("sqlalchemy.url")
+    """Emit SQL to stdout without connecting to the database."""
+    url = settings.DATABASE_URL_SYNC
     context.configure(
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
     )
-
     with context.begin_transaction():
         context.run_migrations()
 
 
-def do_run_migrations(connection):
+# ── Online migrations ─────────────────────────────────────────────────────────
+
+def do_run_migrations(connection) -> None:
     context.configure(connection=connection, target_metadata=target_metadata)
-
     with context.begin_transaction():
         context.run_migrations()
 
 
-async def run_migrations_online() -> None:
-    """Run migrations in 'online' mode.
+def run_migrations_online() -> None:
+    """Connect to the database using a synchronous engine and run migrations.
 
-    In this scenario we need to associate a connection
-    with the context.
-
+    We use the *synchronous* DATABASE_URL_SYNC (psycopg2) here because Alembic
+    itself is synchronous — wrapping async engines adds unnecessary complexity.
     """
-    # Force using synchronous engine options for online migrations because Alembic runs synchronously,
-    # but we load the async engine using synchronous URL configurations.
-    
-    # We create a standard synchronous engine or async connection but run it via run_sync.
-    # Since Alembic by default expects sync execution, we use standard sync connection or run_sync.
-    connectable = async_engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
+    connectable = create_engine(
+        settings.DATABASE_URL_SYNC,
         poolclass=pool.NullPool,
     )
+    with connectable.connect() as connection:
+        do_run_migrations(connection)
+    connectable.dispose()
 
-    async with connectable.connect() as connection:
-        await connection.run_sync(do_run_migrations)
 
-    await connectable.dispose()
-
+# ── Entry point ───────────────────────────────────────────────────────────────
 
 if context.is_offline_mode():
     run_migrations_offline()
 else:
-    asyncio.run(run_migrations_online())
+    run_migrations_online()
