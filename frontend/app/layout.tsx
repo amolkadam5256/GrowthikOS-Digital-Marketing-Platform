@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { isRtlLocale, localeMeta } from "@/i18n/config";
 import { getRequestLocale } from "@/i18n/server";
+import { SmoothScroll } from "@/components/providers/SmoothScroll";
+import { CommandPalette } from "@/components/providers/CommandPalette";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -52,7 +54,10 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        {children}
+        <SmoothScroll>
+          {children}
+          <CommandPalette />
+        </SmoothScroll>
       </body>
     </html>
   );

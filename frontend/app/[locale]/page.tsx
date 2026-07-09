@@ -51,5 +51,5 @@ export default async function LocalizedHomePage({
   const locale = await resolveLocale(params);
   const messages = await getMessages(locale);
 
-  return <MarketingHome locale={locale} messages={messages} />;
+  return <MarketingHome />;
 }

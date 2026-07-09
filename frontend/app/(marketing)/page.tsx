@@ -15,7 +15,5 @@ export async function generateMetadata() {
 }
 
 export default async function MarketingHomePage() {
-  const messages = await getMessages(defaultLocale);
-
-  return <MarketingHome locale={defaultLocale} messages={messages} />;
+  return <MarketingHome />;
 }
